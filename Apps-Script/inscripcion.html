@@ -126,6 +126,22 @@ const CAMPS_FALLBACK = [
   {id:'activados-2027',nombre:'Campamento Activados 2027',inicio:'2027-01-08',fin:'2027-01-10',lugar:'Complejo TAM',publico:'Jóvenes',edadMin:0,edadMax:0,precio:0,sena:0,estado:'Abierto'},
   {id:'jle-kids-2027',nombre:'Campamento JLE Kids',inicio:'2027-01-27',fin:'2027-01-28',lugar:'Complejo TAM',publico:'Niños',edadMin:5,edadMax:12,precio:0,sena:0,estado:'Abierto'}
 ];
+function campamentosRespaldo() {
+  const partes = Object.fromEntries(new Intl.DateTimeFormat('en-CA', {timeZone:'America/Argentina/Buenos_Aires',year:'numeric',month:'2-digit'}).formatToParts(new Date()).map(p => [p.type,p.value]));
+  const mes = partes.year + '-' + partes.month;
+  return CAMPS_FALLBACK.map(c => {
+    let precio = 0, detallePrecio = 'A confirmar';
+    if (c.id === 'activados-2027') {
+      if (mes < '2026-11') precio = 120000;
+      else if (mes < '2026-12') precio = 135000;
+      else if (mes < '2027-01') precio = 150000;
+      else if (mes < '2027-02') detallePrecio = 'En enero, consultá el precio con el equipo por WhatsApp: 336 428-9558 o 336 451-0510.';
+    } else if (c.id === 'jle-kids-2027') {
+      precio = mes < '2027-01' ? 75000 : (mes < '2027-02' ? 100000 : 0);
+    }
+    return {...c,precio,detallePrecio:precio ? '' : detallePrecio};
+  });
+}
 const $ = id => document.getElementById(id);
 let camps = [];
 let selectedId = '';
@@ -340,18 +356,30 @@ function guardarInscripcionEnSheets(datos) {
   return new Promise((resolve,reject) => google.script.run.withSuccessHandler(resolve).withFailureHandler(reject).registrarInscripcionWeb(datos));
 }
 async function init() {
+  const q = new URLSearchParams(location.search).get('campamento');
   if (!EN_APPS_SCRIPT) {
-    camps = CAMPS_FALLBACK.map(c => ({...c}));
+    camps = campamentosRespaldo();
     renderCamps();
+    if (q && camps.some(c => c.id === q)) chooseCamp(q);
     $('catalogMsg').className = 'preview';
     $('catalogMsg').textContent = 'Vista previa local. Para leer y guardar datos en Google Sheets, abrí esta página desde la implementación web de Apps Script.';
     return;
   }
+  // Mostrar el formulario enseguida. La consulta a Sheets puede tardar dentro
+  // del iframe, y no queremos dejar vacía la ventana mientras responde.
+  if (q) {
+    camps = campamentosRespaldo();
+    renderCamps();
+    if (camps.some(c => c.id === q)) {
+      chooseCamp(q);
+      msg('Conectando con Google Sheets…', '');
+    }
+  }
   try {
     const data = await obtenerCampamentosDesdeSheets();
+    if (!data || data.ok === false) throw new Error('La respuesta de Campamentos no es válida.');
     camps = Array.isArray(data.campamentos) ? data.campamentos : [];
     renderCamps();
-    const q = new URLSearchParams(location.search).get('campamento');
     if (q && camps.some(c => c.id === q && c.estado === 'Abierto')) chooseCamp(q);
     else if (q) {
       document.body.classList.remove('embedded-checkout');
@@ -363,11 +391,15 @@ async function init() {
       $('catalogMsg').textContent = 'No hay campamentos cargados en la hoja Campamentos. Ejecutá setup() y revisá que haya eventos abiertos.';
     }
   } catch (e) {
-    camps = [];
-    renderCamps();
-    document.body.classList.remove('embedded-checkout');
-    $('catalogMsg').className = 'error';
-    $('catalogMsg').textContent = 'No se pudo conectar con Google Sheets. Revisá setup(), los permisos del proyecto y la última implementación.';
+    if (q && current()) {
+      msg('No se pudieron actualizar ahora los datos de Google Sheets. El formulario sigue visible; al enviar, Apps Script verificará el campamento y el precio vigentes.', 'error');
+    } else {
+      camps = [];
+      renderCamps();
+      document.body.classList.remove('embedded-checkout');
+      $('catalogMsg').className = 'error';
+      $('catalogMsg').textContent = 'No se pudo conectar con Google Sheets. Revisá setup(), los permisos del proyecto y la última implementación.';
+    }
     console.error(e);
   }
 }
@@ -408,10 +440,3 @@ init();
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
