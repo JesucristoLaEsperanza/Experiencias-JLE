@@ -63,14 +63,6 @@ function doGet(e) {
   const template = HtmlService.createTemplateFromFile('inscripcion');
   template.isAppsScript = true;
   template.isEmbedded = Boolean(e && e.parameter && e.parameter.campamento);
-  const campamentoId = e && e.parameter ? String(e.parameter.campamento || '') : '';
-  const initialCamps = {
-    'activados-2027': { nombre: 'Campamento Activados 2027', detalle: '8, 9 y 10 de enero · Complejo TAM · Desde 12 años' },
-    'jle-kids-2027': { nombre: 'Campamento JLE Kids', detalle: '27 y 28 de enero · Complejo TAM · De 5 a 12 años' }
-  };
-  const inicial = initialCamps[campamentoId] || { nombre: 'Campamento', detalle: '' };
-  template.initialCampName = inicial.nombre;
-  template.initialCampDetail = inicial.detalle;
   return template.evaluate()
     .setTitle('Experiencias JLE · Campamentos')
     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
@@ -447,4 +439,3 @@ function edadEn(nac, ref) {
   return edad;
 }
 function limpiar(v) { const s = String(v == null ? '' : v).trim().slice(0, 150); return /^[=+\-@]/.test(s) ? "'" + s : s; } // evita fórmulas inyectadas
-
