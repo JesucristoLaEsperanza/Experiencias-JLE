@@ -87,11 +87,9 @@
         return;
       }
       const url = new URL(base);
-      url.searchParams.set('c', link.dataset.camp);
+      url.searchParams.set('campamento', link.dataset.camp);
       link.href = url.toString();
     });
   </script>
 </body>
 </html>
-
-
