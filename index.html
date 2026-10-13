@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#141329">
+  <meta name="description" content="Conseguí tu entrada para campamentos y encuentros de Jesucristo La Esperanza.">
+  <title>Entradas JLE · Campas y encuentros</title>
+  <link rel="icon" href="assets/logo-jle-negro.png">
+  <link rel="stylesheet" href="landing.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#inicio" aria-label="Experiencias JLE, inicio">
+      <img src="assets/logo-jle-negro.png" alt="Jesucristo La Esperanza">
+      <span>EXPERIENCIAS <b>JLE</b></span>
+    </a>
+    <a class="top-link" href="#eventos">Ver eventos <span aria-hidden="true">↘</span></a>
+  </header>
+
+  <main id="inicio">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="sparkle">✦</span> CAMPAS · CONGRESOS · COMUNIDAD</p>
+        <h1>Salí de la rutina.<br><em>Viví algo</em> inolvidable.</h1>
+        <p class="hero-text">Fe, amigos y momentos que quedan. Elegí tu próxima experiencia, reservá tus entradas y venite con tu grupo.</p>
+        <a class="button button-lime" href="#eventos">Encontrá tu evento <span aria-hidden="true">↓</span></a>
+        <div class="hero-note"><span class="note-dot"></span> Tu próxima historia empieza acá</div>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+        <span class="art-star star-one">✳</span><span class="art-star star-two">✦</span>
+        <div class="camp-badge"><span>JLE</span><b>PASS</b><small>VIVILO</small></div>
+        <span class="art-caption">fe · amigos · aventura</span>
+      </div>
+    </section>
+
+    <section class="events" id="eventos">
+      <div class="section-heading">
+        <div><p class="eyebrow dark-eyebrow">FECHAS QUE DEJAN HUELLA</p><h2>Tu próximo plan</h2></div>
+        <p class="section-aside">Campa, congreso o encuentro.<br>Elegí y reservá tus entradas.</p>
+      </div>
+      <p class="catalog-status" id="catalogStatus" role="status" aria-live="polite">Buscando las próximas experiencias…</p>
+      <button class="catalog-retry is-hidden" id="catalogRetry" type="button">Volver a cargar experiencias</button>
+      <div class="event-grid" id="eventGrid" aria-live="polite"></div>
+      <p class="price-note"><span aria-hidden="true">✦</span> Reservá tu lugar y elegí cómo pagar: transferencia desde tu billetera o efectivo.</p>
+    </section>
+
+    <section class="payment-strip" aria-label="Formas de pago">
+      <div class="payment-icon" aria-hidden="true">$</div>
+      <div><p class="eyebrow">PAGO A TU MANERA</p><h2>Tu billetera de siempre o efectivo.</h2></div>
+      <p>Pagá online con Mercado Pago, transferí desde tu billetera usando el alias o CBU, o elegí efectivo en la iglesia.</p>
+    </section>
+  </main>
+
+  <footer><a class="footer-brand" href="#inicio">✦ Jesucristo La Esperanza</a><span>Nos vemos en el próximo encuentro <b>♥</b></span></footer>
+  <dialog class="registration-modal" id="registrationModal" aria-labelledby="registrationTitle">
+    <div class="registration-modal__head">
+      <div><p class="eyebrow dark-eyebrow">TU PRÓXIMO PASO</p><h2 id="registrationTitle">Reservá tus entradas</h2></div>
+      <div class="registration-modal__actions"><a id="openFormTab" href="#" target="_blank" rel="noopener">Abrir aparte ↗</a><button id="closeForm" type="button" aria-label="Cerrar formulario">×</button></div>
+    </div>
+    <div class="registration-modal__frame-wrap"><p id="formLoading" role="status">Conectando con Google Sheets…</p><iframe id="registrationFrame" title="Reserva de entradas para un evento JLE" allow="clipboard-write"></iframe></div>
+  </dialog>
+  <script src="site-config.js"></script>
+  <script src="landing.js" defer></script>
+</body>
+</html>
+
+
+
